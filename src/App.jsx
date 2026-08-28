@@ -35,7 +35,6 @@ import {
   Hash,
   LogOut,
   Lock,
-  Smartphone,
   CheckCheck,
   FolderOpen
 } from 'lucide-react';
@@ -106,7 +105,7 @@ const GRADE_POINTS = {
 export default function App() {
   // Authentication State
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('bm_user');
+    const saved = localStorage.getItem('bm_user_v5');
     return saved ? JSON.parse(saved) : {
       name: 'Blaze Student',
       email: 'student@university.edu',
@@ -118,7 +117,7 @@ export default function App() {
     };
   });
 
-  const [authStep, setAuthStep] = useState('logged_in'); // 'email', 'otp', 'logged_in'
+  const [authStep, setAuthStep] = useState('email'); // 'email' or 'otp'
   const [inputEmail, setInputEmail] = useState('');
   const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [generatedOtp, setGeneratedOtp] = useState('');
@@ -127,22 +126,22 @@ export default function App() {
 
   // App Main State
   const [subjects, setSubjects] = useState(() => {
-    const saved = localStorage.getItem('bm_subjects_v4');
+    const saved = localStorage.getItem('bm_subjects_v5');
     return saved ? JSON.parse(saved) : INITIAL_SUBJECTS;
   });
 
   const [timetable, setTimetable] = useState(() => {
-    const saved = localStorage.getItem('bm_timetable_v4');
+    const saved = localStorage.getItem('bm_timetable_v5');
     return saved ? JSON.parse(saved) : INITIAL_TIMETABLE;
   });
 
   const [notes, setNotes] = useState(() => {
-    const saved = localStorage.getItem('bm_notes_v4');
+    const saved = localStorage.getItem('bm_notes_v5');
     return saved ? JSON.parse(saved) : INITIAL_NOTES;
   });
 
   const [globalTarget, setGlobalTarget] = useState(() => {
-    const saved = localStorage.getItem('bm_target_v4');
+    const saved = localStorage.getItem('bm_target_v5');
     return saved ? Number(saved) : 75;
   });
 
@@ -162,12 +161,10 @@ export default function App() {
   const [isAddSubjectOpen, setIsAddSubjectOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
-  const [isAddNoteOpen, setIsAddNoteOpen] = useState(false);
 
   // Forms
   const [subjectForm, setSubjectForm] = useState({ id: '', name: '', code: '', attended: 0, total: 0, target: 75 });
   const [selectedDay, setSelectedDay] = useState('Monday');
-  const [noteForm, setNoteForm] = useState({ title: '', subject: '', category: 'Class Notes', link: '', fileName: '' });
   const [profileForm, setProfileForm] = useState({ ...user });
 
   // GPA State
@@ -177,18 +174,13 @@ export default function App() {
     { name: 'Operating Systems', credits: 3, grade: 'A (Very Good)' },
     { name: 'Computer Networks', credits: 4, grade: 'B+ (Good)' }
   ]);
-  const [semesters, setSemesters] = useState([
-    { sem: 'Sem 1', sgpa: 8.5, credits: 20 },
-    { sem: 'Sem 2', sgpa: 8.8, credits: 22 },
-    { sem: 'Sem 3', sgpa: 8.7, credits: 21 }
-  ]);
 
   useEffect(() => {
-    localStorage.setItem('bm_subjects_v4', JSON.stringify(subjects));
+    localStorage.setItem('bm_subjects_v5', JSON.stringify(subjects));
   }, [subjects]);
 
   useEffect(() => {
-    localStorage.setItem('bm_user', JSON.stringify(user));
+    localStorage.setItem('bm_user_v5', JSON.stringify(user));
   }, [user]);
 
   const showToast = (msg) => {
@@ -205,7 +197,7 @@ export default function App() {
     }
     const domain = email.split('@')[1].toLowerCase();
     if (DISPOSABLE_EMAIL_DOMAINS.includes(domain)) {
-      setEmailError('🚨 Temporary/Disposable email addresses are strictly blocked! Please use a real email.');
+      setEmailError('🚨 Temporary/Disposable emails are strictly blocked! Please use a real email.');
       return false;
     }
     return true;
@@ -220,7 +212,7 @@ export default function App() {
     setGeneratedOtp(mockCode);
     setAuthStep('otp');
     setResendTimer(30);
-    showToast(`Verification code sent to ${inputEmail}! (Demo OTP: ${mockCode})`);
+    showToast(`OTP Code sent to ${inputEmail}! (Demo OTP: ${mockCode})`);
   };
 
   // Verify OTP Code
@@ -234,11 +226,10 @@ export default function App() {
         isVerified: true
       };
       setUser(updatedUser);
-      setAuthStep('logged_in');
       setIsAuthOpen(false);
       showToast('Email verified successfully! 🎉');
     } else {
-      showToast('❌ Invalid OTP Code! Try 123456');
+      showToast('❌ Invalid OTP Code! Enter 123456');
     }
   };
 
