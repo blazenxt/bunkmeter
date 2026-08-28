@@ -30,9 +30,10 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Install dependencies
+      - name: Create Native Platform Files & Dependencies
         run: |
           cd mobile_flutter
+          flutter create . --org com.blazenxt --project-name bunkmeter
           flutter pub get
 
       - name: Build Android APK
