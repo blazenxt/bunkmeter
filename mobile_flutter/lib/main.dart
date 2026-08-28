@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'providers/attendance_provider.dart';
+import 'screens/dashboard_screen.dart';
+import 'screens/timetable_screen.dart';
+import 'screens/gpa_screen.dart';
+import 'screens/notes_screen.dart';
+import 'screens/settings_screen.dart';
 
 void main() {
-  runApp(const BunkMeterApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => AttendanceProvider(),
+      child: const BunkMeterApp(),
+    ),
+  );
 }
 
 class BunkMeterApp extends StatelessWidget {
@@ -17,26 +28,33 @@ class BunkMeterApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: const Color(0xFF090D16),
         colorScheme: const ColorScheme.dark(
-          primary: Color(0xFF10B981), // Emerald
-          secondary: Color(0xFF14B8A6), // Teal
+          primary: Color(0xFF10B981),
+          secondary: Color(0xFF14B8A6),
           surface: Color(0xFF0F172A),
         ),
         textTheme: GoogleFonts.plusJakartaSansTextTheme(ThemeData.dark().textTheme),
       ),
-      home: const MainHomeScreen(),
+      home: const MainTabScreen(),
     );
   }
 }
 
-class MainHomeScreen extends StatefulWidget {
-  const MainHomeScreen({super.key});
+class MainTabScreen extends StatefulWidget {
+  const MainTabScreen({super.key});
 
   @override
-  State<MainHomeScreen> createState() => _MainHomeScreenState();
+  State<MainTabScreen> createState() => _MainTabScreenState();
 }
 
-class _MainHomeScreenState extends State<MainHomeScreen> {
+class _MainTabScreenState extends State<MainTabScreen> {
   int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    const DashboardScreen(),
+    const TimetableScreen(),
+    const GpaScreen(),
+    const NotesScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -57,16 +75,23 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             const SizedBox(width: 10),
             const Text(
               'BunkMeter 📊',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
             ),
           ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.grey),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
+          )
+        ],
       ),
-      body: Center(
-        child: Text(
-          'Welcome to BunkMeter - Safe Bunk Engine',
-          style: TextStyle(color: Colors.grey[400]),
-        ),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -74,6 +99,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
         backgroundColor: const Color(0xFF0F172A),
         selectedItemColor: const Color(0xFF10B981),
         unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.check_circle_outline), label: 'Attendance'),
           BottomNavigationBarItem(icon: Icon(Icons.calendar_today), label: 'Schedule'),
