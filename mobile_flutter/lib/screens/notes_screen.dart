@@ -26,7 +26,7 @@ class NotesScreen extends StatelessWidget {
                 border: Border.all(color: Colors.white.withOpacity(0.08)),
               ),
               child: Column(
-                crossAxisAlignment: StartAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
