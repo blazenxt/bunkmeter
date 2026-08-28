@@ -23,7 +23,7 @@ class _TimetableScreenState extends State<TimetableScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: StartAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Day Selector Chips
             SingleChildScrollView(
