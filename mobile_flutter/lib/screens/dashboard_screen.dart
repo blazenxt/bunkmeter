@@ -29,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: StartAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Overall Meter Hero Card
             Container(
@@ -401,7 +401,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               if (nameCtrl.text.isNotEmpty) {
                 final newSub = Subject(
-                  id: Date.now().toString(),
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
                   name: nameCtrl.text,
                   code: codeCtrl.text,
                   attended: int.tryParse(attendedCtrl.text) ?? 0,
